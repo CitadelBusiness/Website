@@ -1,0 +1,355 @@
+/* ====== Osnove ====== */
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Outfit', sans-serif;
+  position: relative;
+}
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.page-content { min-height: 100%; }
+
+/* ====== CSS spremenljivke ====== */
+:root {
+  --header-h: 64px;
+  --z-header: 100;
+  --z-topbar: 90;
+  --z-topbar-backdrop: 80;
+  --topbar-offset: -55px;
+  --topbar-h: 10%;
+}
+
+/* ====== HEADER ====== */
+/* ====== Header ostane kot imaš ====== */
+.tab-shell { position: relative; }
+
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  background: transparent;
+  border-bottom: 1px solid rgba(235, 3, 3, 0.1);
+  z-index: var(--z-header);
+  transition: background 0.3s ease;
+}
+body.scrolled .site-header {
+  background: transparent;
+  backdrop-filter: blur(15px);
+  border-bottom-color: rgba(235, 19, 19, 0.2);
+}
+.image-container {
+  width: 60px; height: 60px;
+  background: url("../../assets/images/logo.png") center/contain no-repeat;
+}
+
+/* ====== Burger ====== */
+.burger {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: #fff;
+  display: inline-grid;
+  align-content: center;
+  justify-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.burger-line {
+  width: 22px; height: 2px; background: #1f2937;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+.burger.is-open { background: transparent; border: none; }
+.burger.is-open .burger-line:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+.burger.is-open .burger-line:nth-child(2){ opacity: 0; }
+.burger.is-open .burger-line:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+/* =========================================
+   ============   TOPBAR (NAV)   ============
+   Faze: .closed | .opening | .open | .closing
+   ========================================= */
+
+/* — Osnova (skupna) — */
+.topbar {
+  position: fixed;
+  top: calc(var(--header-h) + var(--topbar-offset));
+  right: 1.5%;
+  border-radius: 10px;
+  background: #fff;
+  z-index: var(--z-topbar);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1%;
+  overflow: hidden;
+  transform-origin: top right;
+  box-shadow: none;
+  border: none;
+}
+
+/* — Faza: zaprto — */
+.topbar.closed {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  /* brez transform tukaj, da ne povzroči povratnega 'skoka' po animaciji */
+  transition: none;
+}
+/* — Faza: odpiranje (prilet ploščice z desne) — */
+/* === Faza “opening” – ploščica raste iz desnega zgornjega kota === */
+.topbar.opening {
+  opacity: 1;
+  width: 0%;
+  height: 0%;
+  pointer-events: auto;
+  transform-origin: top right;
+  transform: translateX(0) scale(1);
+  border: 2px solid black;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+
+  /* Animacija rasti širine + višine */
+  animation: topbarOpenDesktop 1s cubic-bezier(0.4, 0, 0.3, 1) forwards;
+}
+
+/* — Faza: odprto — */
+.topbar.open {
+  opacity: 1;
+  width: 55%;
+  height: 12%;
+  pointer-events: auto;
+  transform: translateX(0) scale(1);
+  border: 2px solid black;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+  transition:
+    height 0.9s cubic-bezier(0.25, 1, 0.3, 1) 0.2s,
+    opacity 0.8s ease;
+}
+
+.topbar.open.expanded {
+  height: 35vh;
+  transform: scaleY(1.02);
+  transition:
+    height 0.8s ease-in-out,
+    transform 0.8s ease-in-out;
+}
+
+/* — Faza: zapiranje (shrink proti desnemu kotu) — */
+.topbar.closing {
+  pointer-events: none;
+  /* nič width/height/opacity tukaj! naj to uredi keyframes */
+  animation: topbarCloseDesktop 1s cubic-bezier(0.4, 0, 0.3, 1) forwards;
+}
+/* ====== Glavni linki (prikaži šele po odprtju) ====== */
+.main-links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  padding: 10px 12px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.main-links.hidden {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+.main-links.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition-delay: 0.2s;
+}
+
+/* Pojedinačni link + hover/active okvirček */
+.main-link-a {
+  padding: 10px;
+  position: relative;
+  display: inline-block;
+  color: #1f2937;
+  font-weight: 800;
+  font-size: clamp(16px, 1.6vw, 20px);
+  transition: color 0.25s ease;
+  text-decoration: none;
+  overflow: hidden;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+.main-link-a::before,
+.main-link-a::after {
+  content: "";
+  position: absolute;
+  display: block;
+  border: 0 solid transparent;
+  width: 0%; height: 0%;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  will-change: width, height, border-color;
+}
+.main-link-a::after { top: 0; left: 0; border-top: 2px solid transparent; border-left: 2px solid transparent; }
+.main-link-a::before { right: 0; bottom: 0; border-bottom: 2px solid transparent; border-right: 2px solid transparent; }
+.main-link-a:hover::before,
+.main-link-a:hover::after { width: 100%; height: 100%; border-color: #a6a6a6; }
+.main-link-a.active::before,
+.main-link-a.active::after { width: 10px; height: 10px; border-color: #a6a6a6; }
+
+/* ====== Backdrop ====== */
+.topbar-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.24);
+  opacity: 0; visibility: hidden;
+  transition: opacity 200ms ease, visibility 200ms step-end;
+  z-index: var(--z-topbar-backdrop);
+  pointer-events: none;
+}
+.topbar-backdrop.show {
+  opacity: 1; visibility: visible;
+  transition: opacity 200ms ease, visibility 0ms;
+}
+
+/* ====== Submenu (fade) ====== */
+.divider-line {
+  width: 85%;
+  margin: 20px auto 10px;
+  border: none;
+  border-top: 2px solid rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.topbar.open.expanded .divider-line { opacity: 1; transition-delay: 0.1s; }
+
+.submenu-wrapper {
+  margin-top: 4%;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  pointer-events: none;
+}
+.topbar.open.expanded .submenu-wrapper {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.submenu-column { display: flex; flex-direction: column; min-width: 180px; }
+.submenu-title { font-size: 1.2rem; font-weight: 500; margin-bottom: 8px; color: #111; font-style: italic; text-align: center; }
+.submenu-item { color: #222; padding: 4px 0; font-weight: 500; transition: color 0.2s ease, font-size 0.2s ease; text-align: center; }
+.submenu-item:hover { color: #227e45; font-size: 18px; }
+
+
+/*PLUSEK V MENIJU*/
+.submenu-indicator {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 8px;
+  transition: transform 0.25s ease;
+  
+}
+
+.submenu-indicator::before,
+.submenu-indicator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: currentColor; /* prevzame barvo besedila */
+  border-radius: 1px;
+  transform-origin: center center;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Horizontalna črta (–) */
+.submenu-indicator::before {
+  width: 10px;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+/* Vertikalna črta (|) */
+.submenu-indicator::after {
+  width: 2px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+}
+
+/* 🔹 Ko je submenu odprt (minus) */
+.main-link-a.expanded .submenu-indicator::after {
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleY(0);
+}
+
+.main-link-a.expanded .submenu-indicator::before {
+  transform: translate(-50%, -50%) rotate(180deg);
+}
+
+.left-button-container {
+  position: absolute;
+  left: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-header.shifted .left-button-container {
+  transform: translateX(-60px); /* premik gumba levo, ko se meni odpre */
+}
+
+
+/* ---------- Desktop keyframes ----------
+   (od 0 → width:55% & height:10%  … kot imaš v desktop CSS)
+*/
+@keyframes topbarOpenDesktop{
+  0%{
+    opacity: 0;
+    width: 0%;
+    height: 0%;
+    transform: scale(0.9);
+  }
+  60%{
+    opacity: 1;
+    width: 55%;
+    height: 3%;     /* “ploščica” – kratka faza */
+    transform: scale(0.98);
+  }
+  100%{
+    opacity: 1;
+    width: 55%;
+    height: 12%;
+    transform: scale(1);
+  }
+}
+@keyframes topbarCloseDesktop{
+  0%{
+    opacity: 1;
+    width: 55%;
+    height: 12%;
+    transform: scale(1);
+  }
+  100%{
+    opacity: 0;
+    width: 0%;
+    height: 0%;
+    transform: scale(0) translate(10%, -5%);
+  }
+}

@@ -1,0 +1,17 @@
+:root{
+  --bg: #0b0b0c;            /* temno ozadje */
+  --bright-text: #ffffff; 
+  --dark-text: #000000;         /* bela */
+  --muted: #bfbfbf;         /* siva za hint */
+  --line: rgba(255,255,255,.8);
+  --chip-h: 54px;
+  --radius-xl: 28px;
+  --font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+          "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-hev: 'Helvetica Neue', Arial, sans-serif;
+  --small-font-size: 18px;
+  --medium-font-size: 24px;
+  --med-big-font-size: 60px;
+  --big-font-size: 80px;
+}

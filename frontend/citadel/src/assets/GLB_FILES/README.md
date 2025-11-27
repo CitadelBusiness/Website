@@ -1,0 +1,1 @@
+1. npx gltfjsx [{ime fajla}]
