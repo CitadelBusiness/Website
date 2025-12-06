@@ -1,14 +1,13 @@
+// src/pages/Home.jsx
 import React from "react";
-import './Home.css';
-import CastleOnRock from '../components/3DModels/Models'
+import "./Home.css";
+import BackgroundScene from "../components/3DModels/Models.jsx";
 
-export default function Home(){
-
-    return(
-        <section className="home-main">
-            <p>react-transition-group</p>
-            {/* <CastleOnRock/> */}
-        </section>
-        
-    );
+export default function Home() {
+  return (
+    <>
+    <div style={{backgroundColor:"white"}}>HEHHEHEHEHEHEHEHEHEEHEHE</div>
+       <BackgroundScene /> 
+    </>
+  );
 }

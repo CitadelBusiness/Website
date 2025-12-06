@@ -1,21 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import  AppRoutes  from './AppRoutes.jsx';
+// src/main.jsx
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import "./index.css";
+import AppRoutes from "./AppRoutes.jsx";
 
-createRoot(document.getElementById('root')).render(
-<StrictMode>
-    <AppRoutes />
-  </StrictMode>
+createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  </React.StrictMode>
 );
-
-
-
-function importAll(r) {
-  r.keys().forEach(r);
-}
-// Automatically import all CSS files in the `components/` folder
-//mportAll(require.context('./components', true, /\.css$/));
-// importAll(require.context('./pages', true, /\.css$/));
-// importAll(require.context('./', true, /\.css$/));
